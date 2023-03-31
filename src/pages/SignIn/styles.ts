@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  display: grid;
-  grid-template-columns: 720px 1fr;
+  display: flex;
 `;
 
 export const ImgBackground = styled.img`
@@ -11,12 +10,13 @@ export const ImgBackground = styled.img`
 `;
 
 export const ContainerSignIn = styled.aside`
-  /* width: 720px; */
+  width: 100%;
+  min-width: 720px;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background: linear-gradient(180deg, #2E2F36 0%, #17181C 100%);
   padding: 9.812rem;
 
@@ -29,6 +29,8 @@ export const ContainerSignIn = styled.aside`
   }
 
   h3 {
+    display: inline-block;
+    width: 405px;
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.5;
@@ -84,12 +86,17 @@ export const FormContainer = styled.form`
   }
 
   .invalidInput {
+    max-width: 416px;
     font-weight: 500;
     line-height: 1.5;
     color: ${props => props.theme["yellow-400"]};
     text-align: center;
 
     margin-top: 1.5rem;
+  }
+
+  .invalid-input {
+    border: 2px solid ${props => props.theme["yellow-400"]};
   }
 `;
 
@@ -101,6 +108,7 @@ export const InputForm = styled.div`
     top: 50%;
     right: 25px;
     width: 1.5rem;
+    overflow: hidden;
   }
 
   input {
