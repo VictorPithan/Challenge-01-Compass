@@ -1,15 +1,24 @@
 import styled from "styled-components";
 
-export const Container = styled.aside`
-  width: 720px;
+export const Container = styled.div`
+  display: flex;
+`;
+
+export const ImgBackground = styled.img`
+  width: auto;
+  height: 100vh;
+`;
+
+export const ContainerRegister = styled.aside`
+  width: 100%;
+  min-width: 720px;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background: linear-gradient(180deg, #2E2F36 0%, #17181C 100%);
   padding-inline: 9.812rem;
-  padding-block: 2.71rem;
+  padding-top: 1rem;
 
   h1 {
     color: ${props => props.theme.white};
@@ -29,7 +38,7 @@ export const Container = styled.aside`
   }
 `;
 export const FormContainer = styled.form`
-  margin-top: 5.937rem;
+  margin-top: 3rem;
   fieldset {
     display: flex;
     flex-direction: column;
@@ -68,6 +77,20 @@ export const FormContainer = styled.form`
       }
     }
   }
+
+  .invalidInput {
+    max-width: 416px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: ${props => props.theme["yellow-400"]};
+    text-align: center;
+
+    margin-top: 1.5rem;
+  }
+
+  .invalid-input {
+    border: 2px solid ${props => props.theme["yellow-400"]};
+  }
 `;
 
 export const InputForm = styled.div`
@@ -99,5 +122,14 @@ export const InputForm = styled.div`
         font-weight: 400;
         line-height: 1.5;
       }
+    }
+
+    input:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 60px #27282F inset;
+      -webkit-text-fill-color: white !important;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      opacity: 0;
     }
 `;
