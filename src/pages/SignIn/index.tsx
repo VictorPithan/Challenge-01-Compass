@@ -1,27 +1,27 @@
 import { z } from "zod"
 import { Container, ContainerSignIn, FormContainer, ImgBackground, InputForm } from "./styles";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 import userIcon from '../../assets/user.svg'
 import lockIcon from '../../assets/lock-simple.svg'
 import backgroundImg from '../../assets/sideImage.png'
-import { ChangeEvent, FormEvent, useState } from "react";
 
 const signInFormSchema = z.object({
-  userName: z.string().email({message: 'O campo deve ser do formato email'}).min(1, {message: 'O campo usuário é obrigatório'}),
-  password: z.string().min(6, {message: "O campo senha é obrigatório"}),
+  userName: z.string().email({message: 'O campo usuário deve ser do formato email'}).nonempty({message: 'O campo usuário é obrigatório'}),
+  password: z.string().nonempty({message: "O campo senha é obrigatório"}),
 })
 
-type SignInFormInputs = z.infer<typeof signInFormSchema>
+type signInFormInputs = z.infer<typeof signInFormSchema>
 
 export function SignIn() {
-  const [users, setUsers] = useState<SignInFormInputs[]>([
+  const [users] = useState<signInFormInputs[]>([
     {
       userName: 'victor@email.com',
       password: '123456',
     },
   ])
 
-  const [user, setUser] = useState<SignInFormInputs>({
+  const [user, setUser] = useState<signInFormInputs>({
     userName: '',
     password: '',
   })
@@ -47,7 +47,7 @@ export function SignIn() {
       return data.userName === user.userName && data.password === user.password
     })
 
-    console.log("formData", user)
+    console.log("Event => ", event)
     const parsedUser = signInFormSchema.safeParse(user)
     if(!parsedUser.success) {
       const error = parsedUser.error
@@ -69,8 +69,8 @@ export function SignIn() {
     }
     
     setUser({userName: '', password: ''})
+    alert("Logado com sucesso!")
     return setFormErrors({})
-
   }
 
   return (
@@ -88,12 +88,12 @@ export function SignIn() {
                 placeholder="Usuário"
                 value={user.userName}
                 onChange={handleValidateUserChange}
+                className=
+                  {Object.keys(formErrors)[0] === "userName" || Object.keys(formErrors)[0] === "CredencialError" ? 'invalid-input' : ''}
               />
               <img src={userIcon} alt="" />
             </InputForm>
-
-            { formErrors.userName && <p className="invalidInput">{formErrors.userName}</p> }
-            
+ 
             <InputForm>
               <input
                 name="password"
@@ -101,12 +101,13 @@ export function SignIn() {
                 placeholder="Senha"
                 value={user.password}
                 onChange={handleValidatePasswordChange}
+                className=
+                  {Object.keys(formErrors)[0] === "password" || Object.keys(formErrors)[0] === "CredencialError" ? 'invalid-input' : ''}
               />
               <img src={lockIcon} alt="" />
             </InputForm>
 
-            { formErrors.password && <p className="invalidInput">{formErrors.password}</p> }
-            { formErrors.CredencialError && <div className="invalidInput"><p>{formErrors.CredencialError}</p><p>Por favor, tente novamente!</p></div> }
+            { Object.keys(formErrors)[0] && <div className="invalidInput"><p>{formErrors[Object.keys(formErrors)[0]]}</p><p>Por favor, tente novamente!</p></div> }
               
             <button type="submit">Logar-se</button>
             <span>Novo por aqui? <a href="/register">Registre-se</a></span>
