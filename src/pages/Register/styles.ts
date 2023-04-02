@@ -1,13 +1,13 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
-`;
+`
 
 export const ImgBackground = styled.img`
   width: auto;
   height: 100vh;
-`;
+`
 
 export const ContainerRegister = styled.aside`
   width: 100%;
@@ -16,12 +16,12 @@ export const ContainerRegister = styled.aside`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background: linear-gradient(180deg, #2E2F36 0%, #17181C 100%);
+  background: linear-gradient(180deg, #2e2f36 0%, #17181c 100%);
   padding-inline: 9.812rem;
   padding-top: 1rem;
 
   h1 {
-    color: ${props => props.theme.white};
+    color: ${(props) => props.theme.white};
     font-size: 4rem;
     font-weight: 500;
     line-height: 1.5;
@@ -34,11 +34,17 @@ export const ContainerRegister = styled.aside`
     line-height: 1.5;
     align-self: flex-start;
 
-    margin-top: 1.5rem;
+    margin-top: 0.75rem;
   }
-`;
+
+  @media (min-height: 1024px) {
+    h3 {
+      margin-top: 1rem;
+    }
+  }
+`
 export const FormContainer = styled.form`
-  margin-top: 3rem;
+  margin-top: 2rem;
   fieldset {
     display: flex;
     flex-direction: column;
@@ -50,12 +56,10 @@ export const FormContainer = styled.form`
       line-height: 1.5;
     }
 
-    
-
     button {
       width: 100%;
-      background: linear-gradient(180deg, #AD2D14 0%, #F42E07 100%);
-      border: 1px solid ${props => props.theme["orange-400"]};
+      background: linear-gradient(180deg, #ad2d14 0%, #f42e07 100%);
+      border: 1px solid ${(props) => props.theme['orange-400']};
       border-radius: 46px;
       padding-inline: 9.4rem;
       padding-block: 1.187rem;
@@ -68,12 +72,32 @@ export const FormContainer = styled.form`
       cursor: pointer;
     }
 
+    .invalidInput + button {
+      margin-top: 1rem;
+    }
+
     span {
       margin: 1.5rem auto;
 
       a:link {
         text-decoration: none;
-        color: ${props => props.theme.white};
+        color: ${(props) => props.theme.white};
+      }
+
+      a:visited {
+        text-decoration: none;
+        color: ${(props) => props.theme.white};
+      }
+    }
+
+    @media (min-height: 1024px) {
+      margin-top: 2.5rem;
+      .invalidInput + button {
+        margin-top: 1.5rem;
+      }
+
+      .invalidInput {
+        margin-top: 1.5rem;
       }
     }
   }
@@ -82,16 +106,16 @@ export const FormContainer = styled.form`
     max-width: 416px;
     font-weight: 500;
     line-height: 1.5;
-    color: ${props => props.theme["yellow-400"]};
+    color: ${(props) => props.theme['yellow-400']};
     text-align: center;
 
-    margin-top: 1.5rem;
+    margin-top: 1rem;
   }
 
   .invalid-input {
-    border: 2px solid ${props => props.theme["yellow-400"]};
+    border: 2px solid ${(props) => props.theme['yellow-400']};
   }
-`;
+`
 
 export const InputForm = styled.div`
   position: relative;
@@ -104,32 +128,32 @@ export const InputForm = styled.div`
   }
 
   input {
-      width: 100%;
+    width: 100%;
 
+    font-weight: 400;
+    line-height: 1.5;
+
+    border: 2px solid ${(props) => props.theme.white};
+    border-radius: 46px;
+    background: transparent;
+    padding-inline: 1.5rem;
+    padding-block: 1.187rem;
+
+    margin-top: 1.5rem;
+
+    &::placeholder {
+      color: ${(props) => props.theme.white};
       font-weight: 400;
       line-height: 1.5;
-      
-      border: 2px solid ${props => props.theme.white};
-      border-radius: 46px;
-      background: transparent;
-      padding-inline: 1.5rem;
-      padding-block: 1.187rem;
-
-      margin-top: 1.5rem;
-
-      &::placeholder {
-        color: ${props => props.theme.white};
-        font-weight: 400;
-        line-height: 1.5;
-      }
     }
+  }
 
-    input:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 60px #27282F inset;
-      -webkit-text-fill-color: white !important;
-    }
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 60px #27282f inset;
+    -webkit-text-fill-color: white !important;
+  }
 
-    input[type="date"]::-webkit-calendar-picker-indicator {
-      opacity: 0;
-    }
-`;
+  input[type='date']::-webkit-calendar-picker-indicator {
+    opacity: 0;
+  }
+`
