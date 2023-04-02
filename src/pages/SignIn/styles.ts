@@ -1,13 +1,13 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
-`;
+`
 
 export const ImgBackground = styled.img`
   width: auto;
   height: 100vh;
-`;
+`
 
 export const ContainerSignIn = styled.aside`
   width: 100%;
@@ -17,11 +17,11 @@ export const ContainerSignIn = styled.aside`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  background: linear-gradient(180deg, #2E2F36 0%, #17181C 100%);
+  background: linear-gradient(180deg, #2e2f36 0%, #17181c 100%);
   padding: 9.812rem;
 
   h1 {
-    color: ${props => props.theme.white};
+    color: ${(props) => props.theme.white};
     font-size: 4rem;
     font-weight: 500;
     line-height: 1.5;
@@ -38,7 +38,7 @@ export const ContainerSignIn = styled.aside`
 
     margin-top: 1.5rem;
   }
-`;
+`
 export const FormContainer = styled.form`
   margin-top: 5.937rem;
   fieldset {
@@ -52,12 +52,10 @@ export const FormContainer = styled.form`
       line-height: 1.5;
     }
 
-    
-
     button {
       width: 100%;
-      background: linear-gradient(180deg, #AD2D14 0%, #F42E07 100%);
-      border: 1px solid ${props => props.theme["orange-400"]};
+      background: linear-gradient(180deg, #ad2d14 0%, #f42e07 100%);
+      border: 1px solid ${(props) => props.theme['orange-400']};
       border-radius: 46px;
       padding-inline: 10.3rem;
       padding-block: 1.187rem;
@@ -75,12 +73,12 @@ export const FormContainer = styled.form`
 
       a:link {
         text-decoration: none;
-        color: ${props => props.theme.white};
+        color: ${(props) => props.theme.white};
       }
 
       a:visited {
         text-decoration: none;
-        color: ${props => props.theme.white};
+        color: ${(props) => props.theme.white};
       }
     }
   }
@@ -89,16 +87,16 @@ export const FormContainer = styled.form`
     max-width: 416px;
     font-weight: 500;
     line-height: 1.5;
-    color: ${props => props.theme["yellow-400"]};
+    color: ${(props) => props.theme['yellow-400']};
     text-align: center;
 
     margin-top: 1.5rem;
   }
 
   .invalid-input {
-    border: 2px solid ${props => props.theme["yellow-400"]};
+    border: 2px solid ${(props) => props.theme['yellow-400']};
   }
-`;
+`
 
 export const InputForm = styled.div`
   position: relative;
@@ -112,28 +110,27 @@ export const InputForm = styled.div`
   }
 
   input {
-      width: 100%;
+    width: 100%;
 
+    font-weight: 400;
+    line-height: 1.5;
+
+    border: 2px solid ${(props) => props.theme.white};
+    border-radius: 46px;
+    background: transparent;
+    padding-inline: 1.5rem;
+    padding-block: 1.187rem;
+
+    margin-top: 1.5rem;
+
+    &::placeholder {
+      color: ${(props) => props.theme.white};
       font-weight: 400;
       line-height: 1.5;
-      
-      border: 2px solid ${props => props.theme.white};
-      border-radius: 46px;
-      background: transparent;
-      padding-inline: 1.5rem;
-      padding-block: 1.187rem;
-
-      margin-top: 1.5rem;
-
-      &::placeholder {
-        color: ${props => props.theme.white};
-        font-weight: 400;
-        line-height: 1.5;
-      }
-      
+    }
   }
 
   input:invalid {
-    border: 2px solid ${props => props.theme["yellow-400"]};
+    border: 2px solid ${(props) => props.theme['yellow-400']};
   }
-`;
+`
