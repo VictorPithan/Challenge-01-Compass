@@ -56,7 +56,6 @@ export function SignIn() {
       return data.userName === user.userName && data.password === user.password
     })
 
-    console.log('Event => ', event)
     const parsedUser = signInFormSchema.safeParse(user)
     if (!parsedUser.success) {
       const error = parsedUser.error
