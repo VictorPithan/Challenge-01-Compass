@@ -18,5 +18,5 @@ To login successfully use:\
   senha: 123456
 
 <p aligh="center">
-  <img width="470" src="src/assets/to_readme/modo_de_uso.gif">
+  <img width="470" src="src/assets/to_readme/modo_de_uso.gif" alt="" />
 </p>
