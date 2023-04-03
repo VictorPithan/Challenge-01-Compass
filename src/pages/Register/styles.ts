@@ -24,7 +24,7 @@ export const ContainerRegister = styled.aside`
     color: ${(props) => props.theme.white};
     font-size: 4rem;
     font-weight: 500;
-    line-height: 1.5;
+    line-height: 1.25;
     align-self: flex-start;
   }
 
@@ -44,7 +44,7 @@ export const ContainerRegister = styled.aside`
   }
 `
 export const FormContainer = styled.form`
-  margin-top: 2rem;
+  margin-top: 1rem;
   fieldset {
     display: flex;
     flex-direction: column;
