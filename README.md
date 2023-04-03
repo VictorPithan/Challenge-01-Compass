@@ -10,7 +10,6 @@ Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.
-https://challenge-01-compass.vercel.app/
 
 ### Deploy
 Open [https://challenge-01-compass.vercel.app](https://challenge-01-compass.vercel.app) to view it in the browser.
