@@ -15,6 +15,7 @@ import cakeIcon from '../../assets/cakeIcon.svg'
 import atIcon from '../../assets/atIcon.svg'
 import shieldCheckIcon from '../../assets/shieldCheckIcon.svg'
 import backgroundImg from '../../assets/sideImage.png'
+import { useNavigate } from 'react-router-dom'
 
 const registerFormSchema = z
   .object({
@@ -49,6 +50,7 @@ const registerFormSchema = z
 type registerFormInputs = z.infer<typeof registerFormSchema>
 
 export function Register() {
+  const navigate = useNavigate()
   const [users, setUsers] = useState<registerFormInputs[]>([])
 
   const [user, setUser] = useState<registerFormInputs>({
@@ -122,6 +124,7 @@ export function Register() {
     setUsers([...users, user])
 
     alert('Registro feito com sucesso')
+    navigate('/')
 
     setUser({
       name: '',
