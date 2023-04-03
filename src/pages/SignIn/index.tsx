@@ -25,7 +25,7 @@ type signInFormInputs = z.infer<typeof signInFormSchema>
 export function SignIn() {
   const [users] = useState<signInFormInputs[]>([
     {
-      userName: 'victor@email.com',
+      userName: 'user@email.com',
       password: '123456',
     },
   ])
