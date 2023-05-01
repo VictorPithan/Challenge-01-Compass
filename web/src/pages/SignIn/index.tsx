@@ -6,11 +6,12 @@ import {
   ImgBackground,
   InputForm,
 } from './styles'
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState, useEffect } from 'react'
 
 import userIcon from '../../assets/user.svg'
 import lockIcon from '../../assets/lock-simple.svg'
 import backgroundImg from '../../assets/sideImage.png'
+import { useNavigate } from 'react-router-dom'
 
 const signInFormSchema = z.object({
   userName: z
@@ -22,13 +23,18 @@ const signInFormSchema = z.object({
 
 type signInFormInputs = z.infer<typeof signInFormSchema>
 
+interface userLoggedProps {
+  name: string;
+  profile_photo: string;
+}
+
+
+
 export function SignIn() {
-  const [users] = useState<signInFormInputs[]>([
-    {
-      userName: 'user@email.com',
-      password: '123456',
-    },
-  ])
+
+  const navigate = useNavigate()
+  
+  const [userlogged, setUserlogged] = useState<userLoggedProps | null>()
 
   const [user, setUser] = useState<signInFormInputs>({
     userName: '',
@@ -36,6 +42,8 @@ export function SignIn() {
   })
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
+
+  let isValidated = false
 
   function handleValidatePasswordChange(event: ChangeEvent<HTMLInputElement>) {
     event.target.setCustomValidity('')
@@ -49,37 +57,83 @@ export function SignIn() {
     setUser({ ...user })
   }
 
-  function handleValidateLoginUser(event: FormEvent) {
+  async function handleValidateLoginUser(event: FormEvent) {
     event.preventDefault()
 
-    const isValidated = users.find((data) => {
-      return data.userName === user.userName && data.password === user.password
+    let isValidated = false
+    await fetch('http://localhost:3333/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ 
+        userName: user.userName,
+        password: user.password
+      })
     })
-
-    const parsedUser = signInFormSchema.safeParse(user)
-    if (!parsedUser.success) {
-      const error = parsedUser.error
-      let newErrors = {}
-      for (const issue of error.issues) {
-        newErrors = {
-          ...newErrors,
-          [issue.path[0]]: issue.message,
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Não foi possível fazer o login");
         }
-      }
-      return setFormErrors(newErrors)
-    }
+        return response.json();
+      })
+      .then(data => {
+        console.log("DATA =>" ,data)
+        setUserlogged(data)
+        isValidated = true
+        // console.log("USERLOGGED", userlogged)
+        // console.log("ISValidated", isValidated)
+        setFormErrors({})
+        alert('Logado com sucesso!')
+        navigate('/home')
+      })
+      .catch((err) => {
+        console.log('entrou aq?',err)
+          const newError = {
+          CredencialError: 'Usuário e/ou Senha inválidos.',
+        }
+        console.log("Entrou no erro de autenticação")
+        setFormErrors((prev) => newError)
+        console.log("FormErrors", formErrors)
 
-    if (isValidated === undefined) {
-      const newError = {
-        CredencialError: 'Usuário e/ou Senha inválidos.',
-      }
-      return setFormErrors(newError)
-    }
+        const parsedUser = signInFormSchema.safeParse(user)
+        if (!parsedUser.success) {
+          const error = parsedUser.error
+          let newErrors = {}
+          for (const issue of error.issues) {
+            newErrors = {
+              ...newErrors,
+              [issue.path[0]]: issue.message,
+            }
+          }
+          setFormErrors(newErrors)
+        }
+        alert("Credenciais Inválidas")
+      })
 
+    // const isValidated = users.find((data) => {
+    //   return data.userName === user.userName && data.password === user.password
+    // })
+
+    console.log("ISValidatedAgain", isValidated)
+
+    
+
+    
+    // if (isValidated) { //isValidated === false
+    //   const newError = {
+    //     CredencialError: 'Usuário e/ou Senha inválidos.',
+    //   }
+    //   console.log("Entrou no erro de autenticação")
+    //   return setFormErrors(newError)
+    // }
+    // console.log("passou no erro de autenticação")
     setUser({ userName: '', password: '' })
-    alert('Logado com sucesso!')
-    return setFormErrors({})
+    // alert('Logado com sucesso!')
+    
   }
+
+  console.log("USERLOGGED FORA DA FUNÇÃO", userlogged)
 
   return (
     <Container>
