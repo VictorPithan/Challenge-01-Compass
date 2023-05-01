@@ -3,7 +3,7 @@ import { Container } from "./styles";
 
 interface AvatarProps extends ImgHTMLAttributes<HTMLImageElement> {}
 
-export function Avatar({...props}: AvatarProps) {
+export function Avatar({ ...props}: AvatarProps) {
   return (
     <Container {...props} />
   )
