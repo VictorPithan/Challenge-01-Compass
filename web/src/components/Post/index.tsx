@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ChangeEvent, FormEvent, InvalidEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, InvalidEvent, useContext, useState } from "react";
 
 import { format, formatDistanceToNow } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
@@ -46,9 +46,6 @@ export function Post({user, userName, avatarURL = iconProfile, publishedAt, desc
 
   const [likesPost, setLikesPost] = useState(likes);
   const [like, setLike] = useState(0);
-
-  console.log(userlogged?.profile_photo);
-  
 
   function handleCreateNewComment(event: FormEvent) {
     event.preventDefault()
