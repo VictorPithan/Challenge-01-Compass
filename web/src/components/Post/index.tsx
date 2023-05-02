@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, InvalidEvent, useEffect, useState } from "react";
+import { ButtonHTMLAttributes, ChangeEvent, FormEvent, InvalidEvent, useContext, useState } from "react";
 
 import { format, formatDistanceToNow } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
@@ -7,6 +7,7 @@ import { Avatar } from "../Avatar";
 import { BottomButtonsContainer, Comment, ImgPost, NewCommentPost, PostButton, PostContainer } from "./styles";
 
 import likeIcon from '../../assets/likeIcon.svg'
+import likeIconWhite from '../../assets/like-svg.svg'
 import commentIcon from '../../assets/commentIcon.svg'
 import shareIcon from '../../assets/shareIcon.svg'
 import oClockIcon from '../../assets/oClockIcon.svg'
@@ -17,20 +18,17 @@ import attachmentIcon from '../../assets/attachmentIcon.svg'
 import mapPinIcon from '../../assets/mapPinIcon.svg'
 import emojiIcon from '../../assets/emojiIcon.svg'
 import iconProfile from '../../assets/profileIcon.jpg'
-
-// interface AuthorPost {
-//   user: string;
-//   avatarURL: string;
-// }
+import { DataContext } from "../../contexts/DataContext";
 
 interface CommentProps {
-  user: string;
-  avatarURL?: string;
+  user?: string | null;
+  profile_photo?: string | null;
+  name?: string;
   comment: string;
 }
 
 interface PostProps {
-  user: string;
+  user?: string;
   userName?: string;
   avatarURL?: string;
   publishedAt: Date | string;
@@ -41,16 +39,25 @@ interface PostProps {
 }
 
 export function Post({user, userName, avatarURL = iconProfile, publishedAt, description, likes, comments = [], imagePost = null}: PostProps) {
+  const { userlogged } = useContext(DataContext) 
   const [listComments, setListComments] = useState(comments)
 
   const [newCommentText, setNewCommentText] = useState("")
+
+  const [likesPost, setLikesPost] = useState(likes);
+  const [like, setLike] = useState(0);
+
+  console.log(userlogged?.profile_photo);
+  
 
   function handleCreateNewComment(event: FormEvent) {
     event.preventDefault()
 
     const newComment = {
-      user,
-      comment: newCommentText
+      user: userlogged?.name,
+      comment: newCommentText,
+      name: userlogged?.name,
+      profile_photo: userlogged?.profile_photo
     }
 
     setListComments([newComment, ...listComments])
@@ -64,6 +71,16 @@ export function Post({user, userName, avatarURL = iconProfile, publishedAt, desc
 
   function handleNewCommentInvalid(event: InvalidEvent<HTMLTextAreaElement>) {
     event.target.setCustomValidity("Esse campo é obrigatório!")
+  }
+
+  function handlerLikePost() {
+    if(like > 0 && likesPost > 0) {
+      setLike(0)
+      setLikesPost(likesPost - 1)
+    } else {
+      setLike(1)
+      setLikesPost(likesPost + 1)
+    }
   }
 
   const publishedDateFormatted = format(
@@ -87,7 +104,7 @@ export function Post({user, userName, avatarURL = iconProfile, publishedAt, desc
         <div>
           <Avatar src={avatarURL} alt="" width={32} height={32}/>
           <div>
-            <p>{user}</p>
+            <p>{userName}</p>
             <time
               title={publishedDateFormatted}
               dateTime={new Date(publishedAt).toISOString()}
@@ -102,13 +119,19 @@ export function Post({user, userName, avatarURL = iconProfile, publishedAt, desc
       {imagePost != null ? <ImgPost src={imagePost} alt="" /> : ''}
 
       <BottomButtonsContainer>
-        <button><img src={likeIcon} alt="" /> Curtiu <span>{likes}</span></button>
-        <button><img src={commentIcon} alt="" /> Comentários <span>{comments.length}</span></button>
+        <button onClick={handlerLikePost} className={like > 0 ? 'likeIcon' : ''}>
+          <img src={like > 0 ? likeIcon : likeIconWhite} alt="" />
+          {like > 0 ? 'Curtiu' : 'Curtir'}
+          <span className="colorButtonLike">
+            {likesPost}
+          </span>
+        </button>
+        <button><img src={commentIcon} alt="" /> Comentários <span>{listComments.length}</span></button>
         <button><img src={shareIcon} alt="" /> Compartilhar</button>
       </BottomButtonsContainer>
 
       <NewCommentPost>
-        <Avatar src="https://github.com/victorpithan.png" width={32} height={32}/>
+        <Avatar src={userlogged?.profile_photo ?? iconProfile} width={32} height={32}/>
         <form onSubmit={handleCreateNewComment} className="commentForm">
           <div>
             <textarea
@@ -185,11 +208,11 @@ export function Post({user, userName, avatarURL = iconProfile, publishedAt, desc
       </NewCommentPost>
       <p>Todos os comentários</p>
       {
-        listComments.map(comment => {
+        listComments.map((comment, i) => {
           return (
-            <Comment key={`${comment.comment}${comment.user}`}>
-              <Avatar src={comment.avatarURL = iconProfile} width={24} height={24}/>
-              <p><span>{comment.user}: </span>{comment.comment}</p>
+            <Comment key={`${i} ${comment.comment}`}>
+              <Avatar src={comment.profile_photo ?? iconProfile} width={24} height={24}/>
+              <p><span>{comment.name}: </span>{comment.comment}</p>
             </Comment>
           )
         })
