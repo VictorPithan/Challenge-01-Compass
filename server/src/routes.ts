@@ -17,8 +17,8 @@ function findPosts() {
       const userComent = findUserByUsername(coment.user);
       return {
         ...coment,
-        profile_photo: user?.profile_photo,
-        name: user?.name
+        profile_photo: userComent?.profile_photo,
+        name: userComent?.name
       }
     })
 
@@ -36,7 +36,6 @@ routes.get('/api/v1/user', (req, res) => {
 })
 
 routes.get('/api/v1/user/post', (req, res) => {
-  console.log(findPosts())
   res.send(findPosts())
 })
 
@@ -44,16 +43,13 @@ routes.post('/login', (req, res) => {
   const userName = req.body?.userName;
   const password = req.body?.password;
 
-  console.log(userName)
-  console.log(password)
-
-  const auth = listUsers.users.find((user) => user.email === userName && user.password === password)
+  const auth = listUsers.users.find((user) => user.user === userName && user.password === password)
 
   if (!auth) {
     res.status(404).send()
   } else {
     const userAuthenticated = {
-      name: auth.email,
+      name: auth.name,
       profile_photo: auth.profile_photo
     }
     return res.json(userAuthenticated).send()
