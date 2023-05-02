@@ -7,7 +7,7 @@
         "birthdate": "1992-08-05",
         "email": "ana.irschlinger.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Camila Florão Barcellos",
@@ -15,7 +15,7 @@
         "birthdate": "1993-04-10",
         "email": "camila.barcellos.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Dener Kisner Borges",
@@ -23,7 +23,7 @@
         "birthdate": "1992-06-03",
         "email": "dener.borges.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": "https://github.com/DenerBorges.png"
       },
       {
         "name": "Diego Leonardo Martinicorena Suarez",
@@ -31,7 +31,7 @@
         "birthdate": "1994-09-27",
         "email": "diego.suarez.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Emanuelle Fritzen Machado",
@@ -39,7 +39,7 @@
         "birthdate": "1993-01-28",
         "email": "emanuelle.machado.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": "https://github.com/ManuFritzen.png"
       },
       {
         "name": "Emmanuel Enrick Scortegagna",
@@ -47,7 +47,7 @@
         "birthdate": "1994-05-21",
         "email": "emmanuel.scortegagna.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
         },
       {
         "name": "Gabriel Afonso Fiss",
@@ -55,7 +55,7 @@
         "birthdate": "1992-12-07",
         "email": "gabriel.fiss.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Gabriel Medeiros Garcia",
@@ -63,7 +63,7 @@
         "birthdate": "1993-10-18",
         "email": "gabriel.garcia.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Isadora de Pinho Brito",
@@ -71,7 +71,7 @@
         "birthdate": "1994-06-17",
         "email": "isadora.brito.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": "https://github.com/isadorabrito.png"
       },
       {
         "name": "José Valério da Silva Figueira",
@@ -79,7 +79,7 @@
         "birthdate": "1993-09-15",
         "email": "jose.figueira.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Josiel Jesus Matos",
@@ -87,7 +87,7 @@
         "birthdate": "1992-11-29",
         "email": "josiel.matos.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Kaiane Gabriela Rodrigues Cardozo",
@@ -95,7 +95,7 @@
         "birthdate": "1994-02-22",
         "email": "kaiane.cardozo.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Luiz Ricardo Brugnera",
@@ -103,7 +103,7 @@
         "birthdate": "1993-05-14",
         "email": "luiz.brugnera.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Luiz Tadeu Nespatti Sureto",
@@ -111,7 +111,7 @@
         "birthdate": "1992-07-06",
         "email": "luiz.sureto.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Maria Flor Oliveira Di Piero",
@@ -119,7 +119,7 @@
         "birthdate": "1994-03-31",
         "email": "maria.piero.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Pedro Fajreldin Poglia",
@@ -127,7 +127,7 @@
         "birthdate": "1993-02-25",
         "email": "pedro.poglia.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Victor Rodrigues Pithan",
@@ -135,7 +135,7 @@
         "birthdate": "1994-07-12",
         "email": "victor.pithan.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": "https://github.com/victorpithan.png"
       },
       {
         "name": "Vinicius Faller de Oliveira",
@@ -143,7 +143,7 @@
         "birthdate": "1992-09-08",
         "email": "vinicius.oliveira.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Vinicius Gonçalves Peres",
@@ -151,7 +151,7 @@
         "birthdate": "1993-11-17",
         "email": "vinicius.peres.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Vinicius Madruga Telles",
@@ -159,7 +159,7 @@
         "birthdate": "1994-01-23",
         "email": "vinicius.telles.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       },
       {
         "name": "Yuri Gonçalves Caetano",
@@ -167,7 +167,7 @@
         "birthdate": "1992-10-20",
         "email": "yuri.caetano.pb@compasso.com.br",
         "password": "BolsistasUOL",
-        "profile_photo": ""
+        "profile_photo": null
       }
     ]
   }
