@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ChangeEvent, FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import {
   Container,
   ContainerRegister,
@@ -16,6 +16,7 @@ import atIcon from '../../assets/atIcon.svg'
 import shieldCheckIcon from '../../assets/shieldCheckIcon.svg'
 import backgroundImg from '../../assets/sideImage.png'
 import { useNavigate } from 'react-router-dom'
+import { DataContext } from '../../contexts/DataContext'
 
 const registerFormSchema = z
   .object({
@@ -49,9 +50,19 @@ const registerFormSchema = z
 
 type registerFormInputs = z.infer<typeof registerFormSchema>
 
+interface registerUsersProps {
+  name: string;
+  user: string;
+  birthDate: string;
+  email: string;
+  password: string;
+  profile_photo: string | null;
+}
+
 export function Register() {
+  const { registerUser } = useContext(DataContext)
   const navigate = useNavigate()
-  const [users, setUsers] = useState<registerFormInputs[]>([])
+  // const [users, setUsers] = useState<registerFormInputs[]>([])
 
   const [user, setUser] = useState<registerFormInputs>({
     name: '',
@@ -121,7 +132,16 @@ export function Register() {
       return setFormErrors(newErrors)
     }
 
-    setUsers([...users, user])
+    // setUsers([...users, user])
+    const newUserData: registerUsersProps = {
+      name: user.name,
+      user: user.userName,
+      birthDate: user.birthDate.toString(),
+      email: user.email,
+      password: user.password,
+      profile_photo: "https://conteudo.imguol.com.br/c/entretenimento/ea/2022/10/13/dwayne-the-rock-johnson-vive-anti-heroi-em-adao-negro-1665684069978_v2_900x506.jpg",
+    }
+    registerUser(newUserData)
 
     alert('Registro feito com sucesso')
     navigate('/')
