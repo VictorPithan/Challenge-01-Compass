@@ -5,10 +5,10 @@ import ilhaDoComendador from '../assets/ilhaDoComendador.png'
 interface usersProps {
   name: string;
   user: string;
-  birthdate: string;
+  birthDate: string;
   email: string;
   password: string;
-  profile_photo: string;
+  profile_photo: string | null;
 }
 
 interface PostProps {
@@ -54,6 +54,7 @@ interface UsersContextType {
   userlogged: userLoggedProps | null | undefined;
   createPost: (data: CreatePostInput) => Promise<void>
   userAuthenticate: (data: UserAuthenticate) => Promise<boolean>
+  registerUser: (data:usersProps) => Promise<void>
 }
 
 export const DataContext = createContext({} as UsersContextType)
@@ -118,6 +119,19 @@ export function DataProvider({children}: UsersProviderProps) {
     setPosts([newPost, ...posts])
   }
 
+  async function registerUser(data: usersProps) {
+    const { name, user, birthDate, email, password } = data
+    const newUser = {
+      name,
+      user,
+      birthDate,
+      email,
+      password,
+      profile_photo: null,
+    }
+    // IMPLEMENT POST ROUTE
+  }
+
   async function userAuthenticate(data: UserAuthenticate) {
     let isAuthenticated = false;
     await fetch('http://localhost:3333/login', {
@@ -146,7 +160,7 @@ export function DataProvider({children}: UsersProviderProps) {
   }
 
   return (
-    <DataContext.Provider value={{ users, posts, userlogged, createPost, userAuthenticate }}>
+    <DataContext.Provider value={{ users, posts, userlogged, createPost, userAuthenticate, registerUser }}>
       {children}
     </DataContext.Provider>
   )
