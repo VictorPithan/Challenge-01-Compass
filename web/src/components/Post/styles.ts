@@ -74,6 +74,14 @@ export const BottomButtonsContainer = styled.div`
   padding-inline: 3rem;
   margin-top: 0.625rem;
 
+  .colorButtonLike {
+    background: ${props => props.theme["blue-400"]};
+  }
+
+  .likeIcon {
+    color: ${props => props.theme["blue-400"]};
+  }
+
   button {
     display: flex;
     align-items: center;
@@ -89,9 +97,9 @@ export const BottomButtonsContainer = styled.div`
 
     span {
       font-family: 'Inter', sans-serif;
-      font-size: 0.5rem;
+      font-size: 0.6rem;
       line-height: 1.25;
-      background: ${props => props.theme["blue-400"]};
+      background: ${props => props.theme["gray-650"]};
       color: ${props => props.theme.white};
       border-radius: 16px;
       padding: 0.125rem 0.375rem;
@@ -191,7 +199,7 @@ export const NewCommentPost = styled.div`
     resize: none;
     background: ${props => props.theme["gray-650"]};
     padding-inline: 1.5rem;
-    padding-top: 0.3rem;
+    padding-top: 0.35rem;
     color: ${props => props.theme.white};
     font-size: 0.875rem;
     line-height: 1.5;
