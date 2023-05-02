@@ -6,44 +6,40 @@ import {
   ImgBackground,
   InputForm,
 } from './styles'
-import { ChangeEvent, FormEvent, useState, useEffect } from 'react'
+import { ChangeEvent, FormEvent, useState, useContext } from 'react'
 
 import userIcon from '../../assets/user.svg'
 import lockIcon from '../../assets/lock-simple.svg'
 import backgroundImg from '../../assets/sideImage.png'
 import { useNavigate } from 'react-router-dom'
+import { DataContext } from '../../contexts/DataContext'
 
 const signInFormSchema = z.object({
   userName: z
     .string()
-    .email({ message: 'O campo usuário deve ser do formato email' })
     .nonempty({ message: 'O campo usuário é obrigatório' }),
   password: z.string().nonempty({ message: 'O campo senha é obrigatório' }),
 })
 
 type signInFormInputs = z.infer<typeof signInFormSchema>
 
-interface userLoggedProps {
-  name: string;
-  profile_photo: string;
+interface UserAuthenticate {
+  user: string;
+  password: string;
 }
-
-
 
 export function SignIn() {
 
+  const { userAuthenticate} = useContext(DataContext)
+
   const navigate = useNavigate()
   
-  const [userlogged, setUserlogged] = useState<userLoggedProps | null>()
-
   const [user, setUser] = useState<signInFormInputs>({
     userName: '',
     password: '',
   })
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
-
-  let isValidated = false
 
   function handleValidatePasswordChange(event: ChangeEvent<HTMLInputElement>) {
     event.target.setCustomValidity('')
@@ -60,41 +56,18 @@ export function SignIn() {
   async function handleValidateLoginUser(event: FormEvent) {
     event.preventDefault()
 
-    let isValidated = false
-    await fetch('http://localhost:3333/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 
-        userName: user.userName,
-        password: user.password
-      })
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Não foi possível fazer o login");
-        }
-        return response.json();
-      })
-      .then(data => {
-        console.log("DATA =>" ,data)
-        setUserlogged(data)
-        isValidated = true
-        // console.log("USERLOGGED", userlogged)
-        // console.log("ISValidated", isValidated)
-        setFormErrors({})
-        alert('Logado com sucesso!')
-        navigate('/home')
-      })
-      .catch((err) => {
-        console.log('entrou aq?',err)
-          const newError = {
+    const newUser:UserAuthenticate = {
+      user: user.userName,
+      password: user.password
+    }
+
+    userAuthenticate(newUser)
+    const isLogged = await userAuthenticate(newUser)
+    if (!isLogged) {
+        const newError = {
           CredencialError: 'Usuário e/ou Senha inválidos.',
         }
-        console.log("Entrou no erro de autenticação")
         setFormErrors((prev) => newError)
-        console.log("FormErrors", formErrors)
 
         const parsedUser = signInFormSchema.safeParse(user)
         if (!parsedUser.success) {
@@ -108,32 +81,14 @@ export function SignIn() {
           }
           setFormErrors(newErrors)
         }
-        alert("Credenciais Inválidas")
-      })
 
-    // const isValidated = users.find((data) => {
-    //   return data.userName === user.userName && data.password === user.password
-    // })
-
-    console.log("ISValidatedAgain", isValidated)
-
-    
-
-    
-    // if (isValidated) { //isValidated === false
-    //   const newError = {
-    //     CredencialError: 'Usuário e/ou Senha inválidos.',
-    //   }
-    //   console.log("Entrou no erro de autenticação")
-    //   return setFormErrors(newError)
-    // }
-    // console.log("passou no erro de autenticação")
-    setUser({ userName: '', password: '' })
-    // alert('Logado com sucesso!')
-    
+    } else {
+      setUser({ userName: '', password: '' })
+      setFormErrors({})
+      navigate('/home')
+    }   
+      
   }
-
-  console.log("USERLOGGED FORA DA FUNÇÃO", userlogged)
 
   return (
     <Container>
