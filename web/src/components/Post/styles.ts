@@ -9,6 +9,35 @@ export const PostContainer = styled.article`
 
   header {
     padding-inline: 1rem;
+    display: flex;
+    justify-content: space-between;
+
+    button {
+      background: transparent;
+      border: 0;
+      color: ${props => props.theme["gray-300"]};
+      cursor: pointer;
+      line-height: 0;
+      border-radius: 2px;
+
+      &:hover {
+        color: ${props => props.theme["orange-400"]};
+      }
+    }
+
+    a {
+      background: transparent;
+      border: 0;
+      color: ${props => props.theme["gray-300"]};
+      cursor: pointer;
+      line-height: 0;
+      border-radius: 2px;
+
+      &:hover {
+        color: ${props => props.theme["yellow-400"]};
+      }
+    }
+
     & > div {
       display: flex;
       gap: 1rem;

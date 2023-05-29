@@ -2,17 +2,17 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
+  overflow: hidden;
 `
 
 export const ImgBackground = styled.img`
-  width: auto;
-  height: 100vh;
+  width: 38rem;
 `
 
 export const ContainerSignIn = styled.aside`
   width: 100%;
-  min-width: 720px;
-  height: 100vh;
+  min-width: 38rem;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;

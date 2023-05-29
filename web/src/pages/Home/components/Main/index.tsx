@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, InvalidEvent, useState, useContext } from "react";
+import { ChangeEvent, FormEvent, InvalidEvent, useState, useContext, useEffect } from "react";
 
 import { BodyContainer, BottomButtons, BottomButtonsContainer, BoxTopicContainer, Container, Header, HeaderContainer, MenuContainer, NewPost, PostButton, PostsContainer, Profile } from "./styles";
 
@@ -14,28 +14,59 @@ import mapPinIcon from '../../../../assets/mapPinIcon.svg'
 import emojiIcon from '../../../../assets/emojiIcon.svg'
 import profileIcon from '../../../../assets/profileIcon.jpg'
 import { DataContext } from "../../../../contexts/DataContext";
+import api from "../../../../services/api";
 
 interface CreatePostInput {
+  username: string;
+  profilePhoto?: string;
+  // postDate: Date;
   description: string;
-  url_imagem: string;
+  urlImage: string;
+}
+
+type User = {
+  id: string;
+  name: string;
+  username: string;
+  birthDate: string;
+  email: string;
+  profilePhoto: string | null;
+}
+
+interface PostsProps {
+  id: string;
+  urlImage: string;
+  postDate: string;
+  username: string;
+  profilePhoto: string;
+  description: string;
 }
 
 export function Main() {
 
-  const { createPost, posts, users, userlogged } = useContext(DataContext)
+  const { createPost, deletePost } = useContext(DataContext)
+  const [posts, setPosts] = useState<PostsProps[]>()
+  const [users, setUsers] = useState<User[]>()
+  const [userlogged, setUserlogged] = useState<User | null>()
+
+
   const [newPostText, setNewPostText] = useState("")
 
   async function handleCreateNewPost(event: FormEvent) {
     event.preventDefault()
 
     const newPost: CreatePostInput = {
+      username: userlogged!.username,
+      // profilePhoto: userlogged?.profilePhoto || undefined,
+      // postDate: new Date(),
       description: newPostText,
-      url_imagem: ""
+      urlImage: ""
     }
     
     await createPost(newPost)
 
     setNewPostText("")
+    window.location.href = '/home';
   }
 
   function handleNewPostChange(event: ChangeEvent<HTMLTextAreaElement>) {
@@ -47,8 +78,38 @@ export function Main() {
     event.target.setCustomValidity("Esse campo é obrigatório")
   }
 
-  const isNewPostEmpty = newPostText.length === 0;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseData = await api.get('/users/profile')
+        const data: User = responseData.data
+        setUserlogged({
+            id: data.id,
+            name: data.name,
+            username: data.username,
+            birthDate: data.birthDate,
+            email: data.email,
+            profilePhoto: data.profilePhoto
+        })
+
+        const responseDataPost = await api.get('/posts')
   
+        setPosts([...responseDataPost.data.posts])
+
+
+        const responseUserData = await api.get('/users')
+        const myFriends:User[]  = responseUserData.data.users.filter((item:User)=> {
+          return item.id !== data.id
+        })
+        setUsers([...myFriends])
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const isNewPostEmpty = newPostText.length === 0;
   return (
     <Container>
       <Header>
@@ -58,7 +119,7 @@ export function Main() {
         </MenuContainer>
         <Profile>
           <span>{userlogged?.name}</span>
-          <Avatar src={userlogged?.profile_photo ?? profileIcon} alt="" width={42} height={42}/>
+          <Avatar src={userlogged?.profilePhoto === null ? profileIcon : userlogged?.profilePhoto === "" ? profileIcon : userlogged?.profilePhoto} alt="" width={42} height={42}/>
         </Profile>        
       </Header>
 
@@ -67,7 +128,7 @@ export function Main() {
           <NewPost>
             <form onSubmit={handleCreateNewPost}>
               <HeaderContainer>
-                <Avatar src={userlogged?.profile_photo ?? profileIcon} alt="" width={32} height={32}/>
+                <Avatar src={userlogged?.profilePhoto === null ? profileIcon : userlogged?.profilePhoto === "" ? profileIcon : userlogged?.profilePhoto} alt="" width={32} height={32}/>
                 <textarea
                   name="post"
                   placeholder="No que você está pensando?"
@@ -79,11 +140,11 @@ export function Main() {
               </HeaderContainer>
               <BottomButtonsContainer>
                 <BottomButtons>
-                  <button><img src={cameraIcon} alt="" /></button>
-                  <button><img src={imageIcon} alt="" /></button>
-                  <button><img src={attachmentIcon} alt="" /></button>
-                  <button><img src={mapPinIcon} alt="" /></button>
-                  <button><img src={emojiIcon} alt="" /></button>
+                  <button disabled><img src={cameraIcon} alt="" /></button>
+                  <button disabled><img src={imageIcon} alt="" /></button>
+                  <button disabled><img src={attachmentIcon} alt="" /></button>
+                  <button disabled><img src={mapPinIcon} alt="" /></button>
+                  <button disabled><img src={emojiIcon} alt="" /></button>
                 </BottomButtons>
                 <PostButton type="submit" disabled={isNewPostEmpty}>
                   Postar
@@ -92,18 +153,20 @@ export function Main() {
             </form>
           </NewPost>
 
-          {posts.map((post, i) => {
+          {posts && posts.map((post, i) => {
             return (
               <Post
-                userName={post?.name}
-                user={post?.user}
-                avatarURL={post?.profile_photo ?? profileIcon}
-                publishedAt={post?.post_date}
+                id={post.id}
+                userName={post?.username}
+                // user={post?.user}
+                avatarURL={post?.profilePhoto ?? profileIcon}
+                publishedAt={post?.postDate}
                 description={post?.description}
-                likes={post?.likes}
-                comments={post?.comments}
-                imagePost={post?.url_imagem}
-                key={`${i}${post.description}`}
+                // likes={post?.likes}
+                // comments={post?.comments}
+                imagePost={post?.urlImage}
+                key={post.id}
+                onDeletePost={deletePost}
               />
             )
           })}
@@ -113,10 +176,10 @@ export function Main() {
           <BoxTopicContainer>
             <p>Meus Amigos</p>
             <ul>
-              {users.map((user, i) => {
+              {users && users.map((user, i) => {
                 return (
                 <li key={i}>
-                  <Avatar src={user.profile_photo ?? profileIcon} alt="" width={32} height={32}/>
+                  <Avatar src={user.profilePhoto === null ? profileIcon : user.profilePhoto === "" ? profileIcon : user.profilePhoto} alt="" width={32} height={32}/>
                   <span>{user.name}</span>
                 </li>
               )})}

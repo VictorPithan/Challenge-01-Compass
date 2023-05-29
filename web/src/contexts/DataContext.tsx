@@ -1,166 +1,148 @@
-import { createContext, ReactNode, useEffect, useState } from 'react'
+import { createContext, ReactNode } from 'react'
 
-import ilhaDoComendador from '../assets/ilhaDoComendador.png'
+import api from '../services/api';
 
 interface usersProps {
   name: string;
   user: string;
-  birthDate: string;
+  birthDate: Date;
   email: string;
   password: string;
   profile_photo: string | null;
 }
 
-interface PostProps {
-  user?: string;
-  name?: string;
-  profile_photo?: string;
-  post_date: Date | string;
-  description: string;
-  likes: number;
-  comments: CommentProps[];
-  url_imagem?: string;
+type SignInCredentials = {
+  email: string;
+  password: string;
+}
+
+interface editUsersProps {
+  name: string;
+  username: string;
+  birthDate: Date;
+  email: string;
+  password: string;
+  profilePhoto?: string | null;
 }
 
 interface CommentProps {
-  user: string;
-  name: string;
-  profile_photo: string | null;
-  comment: string;
+  postId: string;
+  username: string;
+  content: string;
 }
 
 interface CreatePostInput {
+  urlImage: string;
+  username: string;
   description: string;
-  url_imagem: string;
 }
 
 interface UsersProviderProps {
   children: ReactNode
 }
 
-interface UserAuthenticate {
-  user: string;
-  password: string;
-}
 
-interface userLoggedProps {
-  name: string;
-  profile_photo: string;
-}
 
 interface UsersContextType {
-  users: usersProps[];
-  posts: PostProps[];
-  userlogged: userLoggedProps | null | undefined;
   createPost: (data: CreatePostInput) => Promise<void>
-  userAuthenticate: (data: UserAuthenticate) => Promise<boolean>
   registerUser: (data:usersProps) => Promise<void>
+  editProfileUser: (data:editUsersProps) => Promise<void>
+  deletePost: (data:string) => Promise<void>
+  createComment: (data: CommentProps) => Promise<void>
+  deleteComment: (idPost: string, commentToDelete: string) => Promise<void>
+  signIn(credentials: SignInCredentials): Promise<boolean>;
+  logout(): Promise<void>;
 }
 
 export const DataContext = createContext({} as UsersContextType)
 
 export function DataProvider({children}: UsersProviderProps) {
-  const [users, setUsers] = useState<usersProps[]>([])
-  const [posts, setPosts] = useState<PostProps[]>([
-    {
-      user: "victorpithan",
-      name: "Victor Pithan",
-      profile_photo: "https://github.com/victorpithan.png",
-      post_date: new Date("2023-04-28T16:15:00"),
-      description: "Minha última viagem para a ilha do Comendador, um lugar simplesmente incrível, natureza praticamente intocada. Recomendo a todos que apreciam o mundo como ele é.",
-      likes: 100,
-      comments: [
-        {
-          user: "diegosuarez",
-          name: "Diego Suarez",
-          profile_photo: null,
-          comment: "Linda foto Victor! 🌊"
-        },
-        {
-          user: "luizbrugnera",
-          name: "Luiz Brugnera",
-          profile_photo: null,
-          comment: "Que praia maravilhosa!"
-        }
-      ],
-      url_imagem: ilhaDoComendador
-    },
-  ])
-  const [userlogged, setUserlogged] = useState<userLoggedProps | null>()
-
-  useEffect(() => {
-    fetch('http://localhost:3333/api/v1/user')
-      .then(response => response.json())
-      .then(data => {
-        const newUsers: usersProps[] = data.users
-        setUsers([...users, ...newUsers])
-      })
-
-    fetch('http://localhost:3333/api/v1/user/post')
-      .then(response => response.json())
-      .then(data => {
-        setPosts([...posts, ...data])
-      })
-  }, [])
-
+  // ARRUMAR
   async function createPost(data: CreatePostInput) {
-    const { description } = data
+    const { description, username } = data
     const newPost = {      
-      user: userlogged?.name,
-      name: userlogged?.name,
-      profile_photo: userlogged?.profile_photo,
-      post_date: new Date(),
+      username: username,
+      postDate: new Date(),
       description: description,
-      likes: 0,
-      comments: [],
-      url_imagem: "",
+      urlImage: "",
     }
 
-    setPosts([newPost, ...posts])
+    await api.post('/posts', newPost)
+  }
+
+  async function deletePost(postToDelete: string) {
+    await api.delete(`posts/${postToDelete}`)
+    window.location.href = '/home';
   }
 
   async function registerUser(data: usersProps) {
     const { name, user, birthDate, email, password } = data
     const newUser = {
       name,
-      user,
+      username: user,
       birthDate,
       email,
       password,
-      profile_photo: null,
+      profilePhoto: "",
+    }
+    const response = await api.post('/users', newUser)
+  }
+
+  // ARRUMAR DEPOIS
+  async function editProfileUser(data: editUsersProps) {
+    const { name, username, password, birthDate, email, profilePhoto } = data
+    const newUser = {
+      name,
+      username,
+      birthDate,
+      email,
+      password,
+      profilePhoto: profilePhoto,
     }
     // IMPLEMENT POST ROUTE
+    console.log(newUser)
   }
 
-  async function userAuthenticate(data: UserAuthenticate) {
-    let isAuthenticated = false;
-    await fetch('http://localhost:3333/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 
-        userName: data.user,
-        password: data.password
+  async function signIn({ email, password}: SignInCredentials) {
+    try {
+      const response = await api.post('/login', {
+        email,
+        password,
       })
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Não foi possível fazer o login");
-        }
-        return response.json();
-      })
-      .then(data => {
-        localStorage.setItem('@userAuth', JSON.stringify(data))
-        setUserlogged(JSON.parse(localStorage.getItem('@userAuth')!))
-        isAuthenticated = true 
-      })
-      .catch((err) => {})
-      return isAuthenticated
+
+        const token = response.data.jwt;
+        localStorage.setItem('@PithanAnimeSocialMidia:authToken', token);
+        return true
+    } catch (error) {
+      console.log(error)
+    }
+    return false;
   }
+
+  async function logout() {
+    localStorage.removeItem('@PithanAnimeSocialMidia:authToken');
+    window.location.href = '/';
+  };
+
+  async function createComment(data: CommentProps) {
+    const { postId, username, content } = data
+    const newComment = {      
+      postId,
+      username,
+      content,
+    }
+
+    await api.post(`/posts/${postId}/comments`, newComment)
+  }
+
+  async function deleteComment(idPost: string, commentToDelete: string) {
+    await api.delete(`posts/${idPost}/comments/${commentToDelete}`)
+    window.location.href = '/home';
+  }
+
 
   return (
-    <DataContext.Provider value={{ users, posts, userlogged, createPost, userAuthenticate, registerUser }}>
+    <DataContext.Provider value={{ signIn, logout, createPost, editProfileUser, deletePost, createComment,deleteComment, registerUser }}>
       {children}
     </DataContext.Provider>
   )

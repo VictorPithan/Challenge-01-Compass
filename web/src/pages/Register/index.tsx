@@ -22,7 +22,7 @@ const registerFormSchema = z
   .object({
     name: z.string().nonempty({ message: 'O campo nome é obrigatório' }),
     userName: z.string().nonempty({ message: 'O campo usuário é obrigatório' }),
-    birthDate: z
+    birthDate: z.coerce
       .date({
         required_error: 'O campo data de nascimento é obrigatório',
         invalid_type_error: 'Formato de dado inválido',
@@ -53,7 +53,7 @@ type registerFormInputs = z.infer<typeof registerFormSchema>
 interface registerUsersProps {
   name: string;
   user: string;
-  birthDate: string;
+  birthDate: Date;
   email: string;
   password: string;
   profile_photo: string | null;
@@ -132,18 +132,16 @@ export function Register() {
       return setFormErrors(newErrors)
     }
 
-    // setUsers([...users, user])
     const newUserData: registerUsersProps = {
       name: user.name,
       user: user.userName,
-      birthDate: user.birthDate.toString(),
+      birthDate: new Date(user.birthDate),
       email: user.email,
       password: user.password,
       profile_photo: "https://conteudo.imguol.com.br/c/entretenimento/ea/2022/10/13/dwayne-the-rock-johnson-vive-anti-heroi-em-adao-negro-1665684069978_v2_900x506.jpg",
     }
     registerUser(newUserData)
 
-    alert('Registro feito com sucesso')
     navigate('/')
 
     setUser({
@@ -202,7 +200,7 @@ export function Register() {
               <input
                 name="birthDate"
                 type={typeInput}
-                onFocus={() => setTypeInput('date')}
+                // onFocus={() => setTypeInput('date')}
                 placeholder="Nascimento"
                 onChange={handleValidateBirthDateChange}
                 className={

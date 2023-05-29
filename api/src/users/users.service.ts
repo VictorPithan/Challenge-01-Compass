@@ -67,10 +67,14 @@ export class UsersService {
     updateUserDto: UpdateUserDto
   ): Promise<ResponseUserDto> {
     const user = await this.getUserOrException(id);
+    const pass = updateUserDto.password
+      ? bcrypt.hashSync(updateUserDto.password, 10)
+      : user.password;
 
     const userUpdated = this.usersRepository.create({
       ...user,
-      ...updateUserDto
+      ...updateUserDto,
+      password: pass
     });
 
     const response = await this.usersRepository.save(userUpdated);

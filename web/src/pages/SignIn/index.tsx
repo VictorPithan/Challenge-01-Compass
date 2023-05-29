@@ -11,7 +11,6 @@ import { ChangeEvent, FormEvent, useState, useContext } from 'react'
 import userIcon from '../../assets/user.svg'
 import lockIcon from '../../assets/lock-simple.svg'
 import backgroundImg from '../../assets/sideImage.png'
-import { useNavigate } from 'react-router-dom'
 import { DataContext } from '../../contexts/DataContext'
 
 const signInFormSchema = z.object({
@@ -24,16 +23,14 @@ const signInFormSchema = z.object({
 type signInFormInputs = z.infer<typeof signInFormSchema>
 
 interface UserAuthenticate {
-  user: string;
+  email: string;
   password: string;
 }
 
 export function SignIn() {
 
-  const { userAuthenticate} = useContext(DataContext)
+  const { signIn } = useContext(DataContext)
 
-  const navigate = useNavigate()
-  
   const [user, setUser] = useState<signInFormInputs>({
     userName: '',
     password: '',
@@ -57,12 +54,11 @@ export function SignIn() {
     event.preventDefault()
 
     const newUser:UserAuthenticate = {
-      user: user.userName,
+      email: user.userName,
       password: user.password
     }
 
-    userAuthenticate(newUser)
-    const isLogged = await userAuthenticate(newUser)
+    const isLogged = await signIn(newUser)
     if (!isLogged) {
         const newError = {
           CredencialError: 'Usuário e/ou Senha inválidos.',
@@ -81,12 +77,11 @@ export function SignIn() {
           }
           setFormErrors(newErrors)
         }
-
     } else {
       setUser({ userName: '', password: '' })
       setFormErrors({})
-      navigate('/home')
-    }   
+      window.location.href = '/home';
+    }
       
   }
 

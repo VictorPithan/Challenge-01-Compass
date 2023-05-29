@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
+  overflow: hidden;
 `
 
 export const ImgBackground = styled.img`
@@ -15,10 +16,10 @@ export const ContainerRegister = styled.aside`
   height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
   background: linear-gradient(180deg, #2e2f36 0%, #17181c 100%);
-  padding-inline: 9.812rem;
-  padding-top: 1rem;
+  padding: 5rem;
 
   h1 {
     color: ${(props) => props.theme.white};
@@ -45,6 +46,7 @@ export const ContainerRegister = styled.aside`
 `
 export const FormContainer = styled.form`
   margin-top: 1rem;
+  width: 416px;
   fieldset {
     display: flex;
     flex-direction: column;
