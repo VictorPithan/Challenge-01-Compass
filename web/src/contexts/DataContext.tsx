@@ -17,6 +17,7 @@ type SignInCredentials = {
 }
 
 interface editUsersProps {
+  id: string | undefined;
   name: string;
   username: string;
   birthDate: Date;
@@ -85,12 +86,11 @@ export function DataProvider({children}: UsersProviderProps) {
       password,
       profilePhoto: "",
     }
-    const response = await api.post('/users', newUser)
+    await api.post('/users', newUser)
   }
 
-  // ARRUMAR DEPOIS
   async function editProfileUser(data: editUsersProps) {
-    const { name, username, password, birthDate, email, profilePhoto } = data
+    const { id, name, username, password, birthDate, email, profilePhoto } = data
     const newUser = {
       name,
       username,
@@ -99,8 +99,8 @@ export function DataProvider({children}: UsersProviderProps) {
       password,
       profilePhoto: profilePhoto,
     }
-    // IMPLEMENT POST ROUTE
-    console.log(newUser)
+
+    await api.put(`/users/${id}`, newUser)
   }
 
   async function signIn({ email, password}: SignInCredentials) {
