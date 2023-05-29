@@ -10,12 +10,18 @@ import { PaginationDto } from 'src/common/pagination.dto';
 import { ResponseUserListDto } from './dto/response-user-list.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResponseUserDto } from './dto/response-user.dto';
+import { Post } from 'src/posts/entities/post.entity';
+import { Comment } from 'src/posts/entities/comment.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Post)
+    private postsRepository: Repository<Post>,
+    @InjectRepository(Comment)
+    private commentsRepository: Repository<Comment>,
     @Inject(UsersMapper) private usersMapper: UsersMapper
   ) {}
 
@@ -33,7 +39,7 @@ export class UsersService {
 
   async findAll(paginationDto: PaginationDto): Promise<ResponseUserListDto> {
     const pagination: PaginationDto = {
-      limit: paginationDto?.limit || 10,
+      limit: paginationDto?.limit || 50,
       page: paginationDto?.page || 1
     };
 
@@ -83,7 +89,23 @@ export class UsersService {
   }
 
   async delete(id: string) {
-    const user = await this.getUserOrException(id);
+    const user = await this.usersRepository.findOne({
+      where: {
+        id
+      },
+      relations: ['posts', 'posts.comments']
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const posts = user.posts;
+
+    // MANUALY CASCADE
+    posts.map(async (post) => {
+      await this.commentsRepository.remove(post.comments);
+      await this.postsRepository.delete(post.id);
+    });
 
     await this.usersRepository.delete(user.id);
   }
@@ -92,7 +114,8 @@ export class UsersService {
     const user = await this.usersRepository.findOne({
       where: {
         id
-      }
+      },
+      relations: ['posts']
     });
 
     if (!user) {

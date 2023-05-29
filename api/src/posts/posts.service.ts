@@ -49,7 +49,7 @@ export class PostsService {
 
   async findAll(paginationDto: PaginationDto): Promise<ResponsePostListDto> {
     const pagination: PaginationDto = {
-      limit: paginationDto?.limit || 10,
+      limit: paginationDto?.limit || 50,
       page: paginationDto?.page || 1
     };
 
@@ -59,6 +59,7 @@ export class PostsService {
     const [data, total] = await this.postsRepository
       .createQueryBuilder('posts')
       .leftJoinAndSelect('posts.user', 'user')
+      .orderBy('posts.postDate', 'DESC')
       .take(take)
       .skip(skip)
       .getManyAndCount();
@@ -158,7 +159,7 @@ export class PostsService {
     paginationDto: PaginationDto
   ): Promise<ResponseCommentListDto> {
     const pagination: PaginationDto = {
-      limit: paginationDto?.limit || 10,
+      limit: paginationDto?.limit || 50,
       page: paginationDto?.page || 1
     };
 
@@ -170,6 +171,7 @@ export class PostsService {
       .leftJoinAndSelect('comments.user', 'user')
       .leftJoinAndSelect('comments.post', 'post')
       .where('comments.post_id = :id')
+      .orderBy('comments.createdAt', 'DESC')
       .setParameter('id', postId)
       .take(take)
       .skip(skip)
