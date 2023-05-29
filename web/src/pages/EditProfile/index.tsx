@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useContext, useState } from 'react'
 import {
   Container,
   ContainerRegister,
@@ -15,17 +15,13 @@ import cakeIcon from '../../assets/cakeIcon.svg'
 import atIcon from '../../assets/atIcon.svg'
 import shieldCheckIcon from '../../assets/shieldCheckIcon.svg'
 import backgroundImg from '../../assets/sideImage.png'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { DataContext } from '../../contexts/DataContext'
 
-import { addDays, format } from "date-fns";
-import ptBR from "date-fns/locale/pt-BR";
-import api from '../../services/api'
-
-const editProfileFormSchema = z
+const registerFormSchema = z
   .object({
     name: z.string().nonempty({ message: 'O campo nome é obrigatório' }),
-    username: z.string().nonempty({ message: 'O campo usuário é obrigatório' }),
+    userName: z.string().nonempty({ message: 'O campo usuário é obrigatório' }),
     birthDate: z.coerce
       .date({
         required_error: 'O campo data de nascimento é obrigatório',
@@ -37,82 +33,45 @@ const editProfileFormSchema = z
       .string()
       .email({ message: 'Formato de email inválido' })
       .min(1, { message: 'O campo email é obrigatório' }),
-      password: z.string().nonempty({ message: 'O campo senha é obrigatório' }),
-      confirmPassword: z
-        .string()
-        .nonempty({ message: 'O campo confirmar senha é obrigatório' }),
-      profilePhoto: z.string().nullable(),
-    })
-    .superRefine(({ password, confirmPassword }, ctx) => {
-      if (password !== confirmPassword) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['confirmPasswordInvalid'],
-          message: 'As senhas não correspondem',
-        })
-      }
-    })
+    password: z.string().nonempty({ message: 'O campo senha é obrigatório' }),
+    confirmPassword: z
+      .string()
+      .nonempty({ message: 'O campo confirmar senha é obrigatório' }),
+  })
+  .superRefine(({ password, confirmPassword }, ctx) => {
+    if (password !== confirmPassword) {
+      ctx.addIssue({
+        code: 'custom',
+        path: ['confirmPasswordInvalid'],
+        message: 'As senhas não correspondem',
+      })
+    }
+  })
 
+type registerFormInputs = z.infer<typeof registerFormSchema>
 
-type editProfileFormInputs = z.infer<typeof editProfileFormSchema>
-
-interface editUsersProps {
+interface registeredUsersProps {
+  id: string | undefined;
   name: string;
   username: string;
-  email: string;
-  birthDate: string;
-  profilePhoto?: string | null;
-  password: string;
-  confirmPassword: string;
-}
-
-interface editedUsersProps {
-  name: string;
-  username: string;
-  email: string;
   birthDate: Date;
-  profilePhoto?: string | null;
+  email: string;
   password: string;
+  profilePhoto?: string | null;
 }
 
 export function EditProfile() {
   const { editProfileUser } = useContext(DataContext)
   const navigate = useNavigate()
-
-  const [user, setUser] = useState<editUsersProps>({
+  const { id } = useParams()
+  const [user, setUser] = useState<registerFormInputs>({
     name: '',
-    username: '',
+    userName: '',
+    birthDate: new Date(''),
     email: '',
-    birthDate: '',
     password: '',
     confirmPassword: '',
-    profilePhoto: '',
   })
-
-  
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const responseData = await api.get('/users/profile')
-        const data: editUsersProps = responseData.data
-        
-        setUser({
-            name: data.name,
-            username: data.username,
-            email: data.email,
-            birthDate: data.birthDate,
-            password: '',
-            confirmPassword: '',
-            profilePhoto: data.profilePhoto ?? ''
-        })
-      } catch (error) {
-        console.error("Erro ao buscar dados:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
 
@@ -124,7 +83,13 @@ export function EditProfile() {
 
   function handleValidateUserNameChange(event: ChangeEvent<HTMLInputElement>) {
     event.target.setCustomValidity('')
-    user.username = event.target.value
+    user.userName = event.target.value
+    setUser({ ...user })
+  }
+
+  function handleValidateBirthDateChange(event: ChangeEvent<HTMLInputElement>) {
+    event.target.setCustomValidity('')
+    user.birthDate = new Date(event.target.value)
     setUser({ ...user })
   }
 
@@ -148,15 +113,17 @@ export function EditProfile() {
     setUser({ ...user })
   }
 
-
   function handleValidateRegisterUser(event: FormEvent) {
     event.preventDefault()
 
-    const parsedUser = editProfileFormSchema.safeParse(user)
+    const parsedUser = registerFormSchema.safeParse(user)
     if (!parsedUser.success) {
       const error = parsedUser.error
       let newErrors = {}
       for (const issue of error.issues) {
+        if (issue.message === 'Invalid date' && issue.path[0] === 'birthDate') {
+          issue.message = 'O campo data de nascimento é obrigatório'
+        }
         newErrors = {
           ...newErrors,
           [issue.path[0]]: issue.message,
@@ -165,39 +132,41 @@ export function EditProfile() {
       return setFormErrors(newErrors)
     }
 
-    const newUserData: editedUsersProps = {
+    const newUserData: registeredUsersProps = {
+      id,
       name: user.name,
-      username: user.username,
-      email: user.email,
+      username: user.userName,
       birthDate: new Date(user.birthDate),
+      email: user.email,
       password: user.password,
-      profilePhoto: user.profilePhoto ?? '',
+      profilePhoto: "",
     }
     editProfileUser(newUserData)
-    console.log(newUserData)
-    alert('Edição feita com sucesso')
 
+    navigate('/home')
 
     setUser({
       name: '',
-      username: '',
+      userName: '',
+      birthDate: new Date(),
       email: '',
-      birthDate: '',
       password: '',
       confirmPassword: '',
-      profilePhoto: '',
     })
 
-    navigate('/')
+    setTypeInput('text')
     return setFormErrors({})
   }
 
+  const [typeInput, setTypeInput] = useState('text')
   return (
     <Container>
       <ContainerRegister>
+        <h1>Olá,</h1>
+        <h3>Por favor, atualize seus dados para continuar</h3>
         <FormContainer onSubmit={handleValidateRegisterUser}>
           <fieldset>
-            <legend>Edição de perfil</legend>
+            <legend>Editar Perfil</legend>
             <InputForm>
               <input
                 name="name"
@@ -214,10 +183,10 @@ export function EditProfile() {
 
             <InputForm>
               <input
-                name="username"
+                name="userName"
                 type="text"
                 placeholder="Usuário"
-                value={user.username}
+                value={user.userName}
                 onChange={handleValidateUserNameChange}
                 className={
                   Object.keys(formErrors)[0] === 'userName'
@@ -226,6 +195,22 @@ export function EditProfile() {
                 }
               />
               <img src={fingerPrintIcon} alt="" />
+            </InputForm>
+
+            <InputForm>
+              <input
+                name="birthDate"
+                type={typeInput}
+                onFocus={() => setTypeInput('date')}
+                placeholder="Nascimento"
+                onChange={handleValidateBirthDateChange}
+                className={
+                  Object.keys(formErrors)[0] === 'birthDate'
+                    ? 'invalid-input'
+                    : ''
+                }
+              />
+              <img src={cakeIcon} alt="" />
             </InputForm>
 
             <InputForm>
@@ -275,17 +260,14 @@ export function EditProfile() {
               />
               <img src={shieldCheckIcon} alt="" />
             </InputForm>
-
             {Object.keys(formErrors)[0] && (
               <p className="invalidInput">
                 {formErrors[Object.keys(formErrors)[0]]}
               </p>
             )}
 
-            <button type="submit">Registrar-se</button>
-            <span>
-              Já possui uma conta? <a href="/">Faça Login</a>
-            </span>
+            <button type="submit">Salvar</button>
+
           </fieldset>
         </FormContainer>
       </ContainerRegister>
