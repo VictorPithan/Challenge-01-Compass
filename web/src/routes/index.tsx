@@ -24,24 +24,8 @@ export const routes = createBrowserRouter([
     path: '/update-post/:id',
     element: <PrivateRoute Screen={EditPost} />
   },
-  // {
-  //   path: '/friend-list',
-  //   element: <PrivateRoute Screen={FriendList} />
-  // },
-  // {
-  //   path: '/friend-profile/:id',
-  //   element: <PrivateRoute Screen={FriendProfileScreen} />
-  // },
-  // {
-  //   path: '/friend-request',
-  //   element: <PrivateRoute Screen={FriendshipRequestList} />
-  // },
-  // {
-  //   path: '/list-users',
-  //   element: <PrivateRoute Screen={ListUsers} />
-  // },
   {
-    path: '/edit-profile',
+    path: '/edit-profile/:id',
     element: <PrivateRoute Screen={EditProfile} />
   },
 ])
