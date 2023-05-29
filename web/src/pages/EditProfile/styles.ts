@@ -2,29 +2,24 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
   display: flex;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
+  overflow: hidden;
 `
 
 export const ImgBackground = styled.img`
-  width: 100%;
-  object-fit: fill;
-  /* height: 100%; */
-  /* flex: 1; */
-  
+  width: auto;
+  height: 100vh;
 `
 
 export const ContainerRegister = styled.aside`
   width: 100%;
-  /* height: 100%; */
-  /* flex: 1; */
+  min-width: 720px;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
   background: linear-gradient(180deg, #2e2f36 0%, #17181c 100%);
-  padding-inline: 9.812rem;
-  padding-top: 1rem;
+  padding: 5rem;
 
   h1 {
     color: ${(props) => props.theme.white};
