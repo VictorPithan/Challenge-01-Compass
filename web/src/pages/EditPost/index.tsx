@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import {
   Container,
   ContainerRegister,
@@ -8,10 +8,8 @@ import {
   InputForm,
 } from './styles'
 
-
 import backgroundImg from '../../assets/sideImage.png'
 import { useNavigate, useParams } from 'react-router-dom'
-import { DataContext } from '../../contexts/DataContext'
 
 import api from '../../services/api'
 
@@ -20,9 +18,6 @@ const editPostFormSchema = z
     description: z.string().nonempty({ message: 'O campo descrição é obrigatório' }),
     urlImage: z.string().nullable(),
   })
-
-
-type editPostFormInputs = z.infer<typeof editPostFormSchema>
 
 interface editPostProps {
   description: string;
@@ -36,16 +31,13 @@ export function EditPost() {
     urlImage: "",
   })
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
-  // const [newPostText, setNewPostText] = useState("")
  const { id } = useParams()
- console.log(id)
 
  useEffect(() => {
   const fetchData = async () => {
     try {
       const response = await api.get(`/posts/${id}`)
       const data = response.data
-      console.log(data)
       setPost({description: data.description, urlImage: data.urlImage})
     } catch (error) {
       console.error("Erro ao buscar dados:", error);
@@ -79,7 +71,6 @@ async function handleUpdatePost(event: FormEvent) {
   await api.put(`/posts/${id}`, post)
   navigate('/home')
 }
-console.log(post)
   return (
     <Container>
       <ContainerRegister>
@@ -98,7 +89,6 @@ console.log(post)
                     ? 'invalid-input'
                     : ''
                 }
-                // onInvalid={handleNewPostInvalid}
               />
             </InputForm>
 
