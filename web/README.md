@@ -48,7 +48,7 @@ The **social media** project was created during the **fullstack + AWS** scholars
 
 ## ⚒️ How to use
 <p align="center">
-  <img src="https://ik.imagekit.io/eyzibogeq/ModoDeUso.gif?updatedAt=1685387068547" width="60000" alt="Modo de uso" />
+  <img src="https://ik.imagekit.io/eyzibogeq/ModoDeUso.gif?updatedAt=1685387068547.gif" width="60000" alt="Modo de uso" />
 </p>
 
 ---
