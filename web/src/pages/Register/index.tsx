@@ -138,7 +138,7 @@ export function Register() {
       birthDate: new Date(user.birthDate),
       email: user.email,
       password: user.password,
-      profile_photo: "https://conteudo.imguol.com.br/c/entretenimento/ea/2022/10/13/dwayne-the-rock-johnson-vive-anti-heroi-em-adao-negro-1665684069978_v2_900x506.jpg",
+      profile_photo: "",
     }
     registerUser(newUserData)
 
@@ -200,7 +200,7 @@ export function Register() {
               <input
                 name="birthDate"
                 type={typeInput}
-                // onFocus={() => setTypeInput('date')}
+                onFocus={() => setTypeInput('date')}
                 placeholder="Nascimento"
                 onChange={handleValidateBirthDateChange}
                 className={
